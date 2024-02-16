@@ -1,3 +1,4 @@
+import 'package:blogapp/widget/animated_blog_post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:models/arc/blog_post.dart';
 
@@ -10,10 +11,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late PageController pageController;
-
+  late List<BlogPost> blogPosts;
   @override
   void initState() {
     pageController = PageController(initialPage: 0, viewportFraction: 0.25);
+
+    blogPosts = [
+      ...BlogPost.blogPosts,
+      ...BlogPost.blogPosts,
+      ...BlogPost.blogPosts,
+    ];
+
     super.initState();
   }
 
@@ -26,15 +34,11 @@ class _HomePageState extends State<HomePage> {
       body: PageView.builder(
           controller: pageController,
           scrollDirection: Axis.vertical,
-          itemCount: BlogPost.blogPosts.length,
+          itemCount: blogPosts.length,
           padEnds: false,
-          itemBuilder: (context, index) {
-            return Container(
-              height: 100,
-              color: Colors.primaries[index % Colors.primaries.length],
-              child: Center(child: Text("$index")),
-            );
-          }),
+          itemBuilder: (context, index) => AnimatedBlogPostCard(
+                blogPosts: blogPosts[index],
+              )),
     );
   }
 }
