@@ -1,6 +1,11 @@
+import 'dart:io';
+import "dart:typed_data";
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:blogapp/services/ai_speech_client.dart';
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
+import 'package:path_provider/path_provider.dart';
 
 class BlogPostScrren extends StatefulWidget {
   final String blogPostId;
@@ -40,6 +45,7 @@ class _BlogPostScrrenState extends State<BlogPostScrren> {
 
 class SelectTableTextWithMenu extends StatefulWidget {
   final String text;
+
   const SelectTableTextWithMenu({super.key, required this.text});
 
   @override
@@ -49,6 +55,7 @@ class SelectTableTextWithMenu extends StatefulWidget {
 
 class _SelectTableTextWithMenuState extends State<SelectTableTextWithMenu> {
   var selectedText = "";
+  final AudioPlayer player = AudioPlayer();
   @override
   Widget build(BuildContext context) {
     return SelectableText(
@@ -62,17 +69,29 @@ class _SelectTableTextWithMenuState extends State<SelectTableTextWithMenu> {
             children: [
               FilledButton(
                   onPressed: () async {
-                    // print(selectedText);
                     final client = AiSpeechClient();
 
                     final res =
                         await client.convertTextToSpeech(text: selectedText);
-                    print("-----------");
                     print(res);
+
+                    playFromUni8List(res["audioBytes"]);
                   },
                   child: const Text("Conver To Speech"))
             ]);
       },
     );
+  }
+
+  void playFromUni8List(Uint8List uint8List) async {
+    Directory temDir = await getTemporaryDirectory();
+
+    String temPath = temDir.path;
+
+    File temFile = File("$temPath/audio_from_tts.mp3");
+
+    await temFile.writeAsBytes(uint8List);
+
+    player.play(DeviceFileSource(temFile.path));
   }
 }
