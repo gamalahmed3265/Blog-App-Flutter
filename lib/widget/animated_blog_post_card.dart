@@ -4,8 +4,12 @@ import 'package:models/arc/blog_post.dart';
 class AnimatedBlogPostCard extends StatelessWidget {
   final BlogPost blogPosts;
   final int cardIndex;
+  final Animation animation;
   const AnimatedBlogPostCard(
-      {super.key, required this.blogPosts, required this.cardIndex});
+      {super.key,
+      required this.blogPosts,
+      required this.cardIndex,
+      required this.animation});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +49,20 @@ class AnimatedBlogPostCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Expanded(
-                child: containerBody(colors, textTheme),
+              AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) {
+                  return Transform(
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.002)
+                      ..rotateX(animation.value), //0/4
+                    alignment: Alignment.topCenter,
+                    child: child,
+                  );
+                },
+                child: Expanded(
+                  child: containerBody(colors, textTheme, fontColors),
+                ),
               ),
             ],
           ),
@@ -55,81 +71,76 @@ class AnimatedBlogPostCard extends StatelessWidget {
     );
   }
 
-  Transform containerBody(List<Color> colors, TextTheme textTheme) {
-    return Transform(
-      transform: Matrix4.identity()
-        ..setEntry(3, 2, 0.002)
-        ..rotateX(0.4),
-      alignment: Alignment.topCenter,
-      child: Container(
-        height: 110,
-        margin: const EdgeInsets.only(top: 8.0),
-        color: colors[cardIndex % colors.length],
-        child: Row(
-          children: [
-            Expanded(
-              child: Image.network(
-                blogPosts.thumbnailUrl,
-                fit: BoxFit.cover,
-              ),
+  Widget containerBody(
+      List<Color> colors, TextTheme textTheme, List fontColors) {
+    return Container(
+      height: 110,
+      margin: const EdgeInsets.only(top: 8.0),
+      color: colors[cardIndex % colors.length],
+      child: Row(
+        children: [
+          Expanded(
+            child: Image.network(
+              blogPosts.thumbnailUrl,
+              fit: BoxFit.cover,
             ),
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    blogPosts.title,
-                    maxLines: 2,
-                    style: textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: colors[cardIndex % colors.length],
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  blogPosts.title,
+                  maxLines: 2,
+                  style: textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: fontColors[cardIndex % colors.length],
+                  ),
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.remove_red_eye,
+                      size: 20,
+                      color: fontColors[cardIndex % colors.length],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.remove_red_eye,
-                        size: 20,
-                        color: colors[cardIndex % colors.length],
-                      ),
-                      const SizedBox(
-                        width: 4.0,
-                      ),
-                      Text(
-                        blogPosts.viewsCount.toString(),
-                        style: textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colors[cardIndex % colors.length]),
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      Icon(
-                        Icons.favorite,
-                        size: 20,
-                        color: colors[cardIndex % colors.length],
-                      ),
-                      const SizedBox(
-                        width: 4.0,
-                      ),
-                      Text(
-                        blogPosts.likesCount.toString(),
-                        style: textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colors[cardIndex % colors.length]),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ))
-          ],
-        ),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      blogPosts.viewsCount.toString(),
+                      style: textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: fontColors[cardIndex % colors.length]),
+                    ),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    Icon(
+                      Icons.favorite,
+                      size: 20,
+                      color: fontColors[cardIndex % colors.length],
+                    ),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      blogPosts.likesCount.toString(),
+                      style: textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colors[cardIndex % colors.length]),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ))
+        ],
       ),
     );
   }
