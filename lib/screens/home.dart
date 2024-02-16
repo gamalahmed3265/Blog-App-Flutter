@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   late List<BlogPost> blogPosts;
   @override
   void initState() {
-    pageController = PageController(initialPage: 0, viewportFraction: 0.25);
+    pageController = PageController(initialPage: 0, viewportFraction: 0.30);
 
     blogPosts = [
       ...BlogPost.blogPosts,
