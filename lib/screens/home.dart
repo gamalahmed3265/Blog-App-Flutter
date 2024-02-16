@@ -31,14 +31,18 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("atombox"),
       ),
-      body: PageView.builder(
-          controller: pageController,
-          scrollDirection: Axis.vertical,
-          itemCount: blogPosts.length,
-          padEnds: false,
-          itemBuilder: (context, index) => AnimatedBlogPostCard(
-                blogPosts: blogPosts[index],
-              )),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: PageView.builder(
+            controller: pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: blogPosts.length,
+            padEnds: false,
+            itemBuilder: (context, index) => AnimatedBlogPostCard(
+                  blogPosts: blogPosts[index],
+                  cardIndex: index,
+                )),
+      ),
     );
   }
 }

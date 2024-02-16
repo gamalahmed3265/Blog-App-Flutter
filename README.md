@@ -9,5 +9,5 @@
 2. create packages to store static data
 
 ```bash
-flutter create --template=package hello
+    flutter create --template=package hello
 ```
