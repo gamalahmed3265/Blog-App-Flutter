@@ -1,3 +1,4 @@
+import 'package:blogapp/screens/blog_post_scrren.dart';
 import 'package:blogapp/shared/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,13 @@ class MyApp extends StatelessWidget {
       theme: const AppTheme().themeData,
       debugShowCheckedModeBanner: false,
       routes: {"/": (context) => const HomePage()},
+      onGenerateRoute: (settings) {
+        if (settings.name == "blog-post") {
+          return MaterialPageRoute(builder: (context) {
+            return BlogPostScrren(blogPostId: settings.arguments as String);
+          });
+        }
+      },
     );
   }
 }

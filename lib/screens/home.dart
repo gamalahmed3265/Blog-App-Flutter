@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   var middleCardIndex = -1;
   @override
   void initState() {
-    pageController = PageController(initialPage: 0, viewportFraction: 0.30);
+    pageController = PageController(initialPage: 0, viewportFraction: 0.25);
     pageController.addListener(_calculatedMiddleCard);
     blogPosts = [
       ...BlogPost.blogPosts,
@@ -34,9 +34,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _initlizedAnimation() {
     int initMiddelCard = (pageController.page?.floor() ?? 0) + 2;
-    // animationController.forEach((key, value) {
-    //   value.forward();
-    // });
 
     for (var i = 0; i <= initMiddelCard; i++) {
       if (i == initMiddelCard) {
@@ -48,7 +45,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _calculatedMiddleCard() {}
+  void _calculatedMiddleCard() {
+    int newMiddleCard = (pageController.page?.round() ?? 0) + 2;
+    if (newMiddleCard > middleCardIndex) {
+      animationController[newMiddleCard - 1]?.forward();
+      setState(() {
+        middleCardIndex = newMiddleCard;
+      });
+    }
+    if (newMiddleCard < middleCardIndex) {
+      animationController[newMiddleCard]?.reverse();
+      setState(() {
+        middleCardIndex = newMiddleCard;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,10 +85,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   CurvedAnimation(
                       parent: animationController[index]!,
                       curve: Curves.bounceOut));
-              return AnimatedBlogPostCard(
-                blogPosts: blogPosts[index],
-                cardIndex: index,
-                animation: animation,
+              return InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "blog-post",
+                      arguments: blogPosts[index].id);
+                },
+                child: AnimatedBlogPostCard(
+                  blogPosts: blogPosts[index],
+                  cardIndex: index,
+                  animation: animation,
+                ),
               );
             }),
       ),

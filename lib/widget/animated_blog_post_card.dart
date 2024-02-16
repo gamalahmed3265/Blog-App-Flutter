@@ -40,7 +40,7 @@ class AnimatedBlogPostCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  authImage(),
+                  authorImage(),
                   const SizedBox(
                     width: 8.0,
                   ),
@@ -49,18 +49,18 @@ class AnimatedBlogPostCard extends StatelessWidget {
                   ),
                 ],
               ),
-              AnimatedBuilder(
-                animation: animation,
-                builder: (context, child) {
-                  return Transform(
-                    transform: Matrix4.identity()
-                      ..setEntry(3, 2, 0.002)
-                      ..rotateX(animation.value), //0/4
-                    alignment: Alignment.topCenter,
-                    child: child,
-                  );
-                },
-                child: Expanded(
+              Expanded(
+                child: AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    return Transform(
+                      transform: Matrix4.identity()
+                        ..setEntry(3, 2, 0.002)
+                        ..rotateX(animation.value), //0.4
+                      alignment: Alignment.topCenter,
+                      child: child,
+                    );
+                  },
                   child: containerBody(colors, textTheme, fontColors),
                 ),
               ),
@@ -102,40 +102,42 @@ class AnimatedBlogPostCard extends StatelessWidget {
                 const SizedBox(
                   height: 8.0,
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.remove_red_eye,
-                      size: 20,
-                      color: fontColors[cardIndex % colors.length],
-                    ),
-                    const SizedBox(
-                      width: 4.0,
-                    ),
-                    Text(
-                      blogPosts.viewsCount.toString(),
-                      style: textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: fontColors[cardIndex % colors.length]),
-                    ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Icon(
-                      Icons.favorite,
-                      size: 20,
-                      color: fontColors[cardIndex % colors.length],
-                    ),
-                    const SizedBox(
-                      width: 4.0,
-                    ),
-                    Text(
-                      blogPosts.likesCount.toString(),
-                      style: textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colors[cardIndex % colors.length]),
-                    )
-                  ],
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.remove_red_eye,
+                        size: 20,
+                        color: fontColors[cardIndex % colors.length],
+                      ),
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      Text(
+                        blogPosts.viewsCount.toString(),
+                        style: textTheme.bodySmall!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: fontColors[cardIndex % colors.length]),
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      Icon(
+                        Icons.favorite,
+                        size: 20,
+                        color: fontColors[cardIndex % colors.length],
+                      ),
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      Text(
+                        blogPosts.likesCount.toString(),
+                        style: textTheme.bodySmall!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colors[cardIndex % colors.length]),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -156,7 +158,7 @@ class AnimatedBlogPostCard extends StatelessWidget {
         ]));
   }
 
-  ClipRRect authImage() {
+  ClipRRect authorImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: Image.network(
