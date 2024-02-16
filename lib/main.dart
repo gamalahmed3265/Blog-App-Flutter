@@ -1,10 +1,12 @@
 import 'package:blogapp/screens/blog_post_scrren.dart';
 import 'package:blogapp/shared/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'screens/home.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

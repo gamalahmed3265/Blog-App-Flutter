@@ -43,7 +43,7 @@ dependencies:
   path_provider: 
   models:
     path: models
-
+  flutter_dotenv:
 dev_dependencies:
   flutter_test:
     sdk: flutter

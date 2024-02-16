@@ -1,3 +1,4 @@
+import 'package:blogapp/services/ai_speech_client.dart';
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
 
@@ -47,17 +48,27 @@ class SelectTableTextWithMenu extends StatefulWidget {
 }
 
 class _SelectTableTextWithMenuState extends State<SelectTableTextWithMenu> {
+  var selectedText = "";
   @override
   Widget build(BuildContext context) {
     return SelectableText(
       widget.text,
+      onSelectionChanged: (selection, cause) {
+        selectedText = selection.textInside(widget.text);
+      },
       contextMenuBuilder: (context, editableTextState) {
         return AdaptiveTextSelectionToolbar(
             anchors: editableTextState.contextMenuAnchors,
             children: [
               FilledButton(
-                  onPressed: () {
-                    print("editableTextState.");
+                  onPressed: () async {
+                    // print(selectedText);
+                    final client = AiSpeechClient();
+
+                    final res =
+                        await client.convertTextToSpeech(text: selectedText);
+                    print("-----------");
+                    print(res);
                   },
                   child: const Text("Conver To Speech"))
             ]);
