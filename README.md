@@ -11,3 +11,14 @@
 ```bash
     flutter create --template=package hello
 ```
+3. flutter pub get
+```yaml
+  google_fonts: 
+  
+  http: 
+  audioplayers: 
+  path_provider: 
+  models:
+    path: models
+  flutter_dotenv:
+```

@@ -73,7 +73,6 @@ class _SelectTableTextWithMenuState extends State<SelectTableTextWithMenu> {
 
                     final res =
                         await client.convertTextToSpeech(text: selectedText);
-                    print(res);
 
                     playFromUni8List(res["audioBytes"]);
                   },
