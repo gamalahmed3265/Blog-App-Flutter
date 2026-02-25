@@ -2,9 +2,9 @@ import 'dart:io';
 import "dart:typed_data";
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:blogapp/services/ai_speech_client.dart';
+import 'package:blog_app_flutter/models/blog_post.dart';
+import 'package:blog_app_flutter/services/ai_speech_client.dart';
 import 'package:flutter/material.dart';
-import 'package:models/models.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BlogPostScrren extends StatefulWidget {
@@ -19,8 +19,9 @@ class _BlogPostScrrenState extends State<BlogPostScrren> {
   late BlogPost blogPost;
   @override
   void initState() {
-    blogPost = BlogPost.blogPosts
-        .firstWhere((blogPost) => blogPost.id == widget.blogPostId);
+    blogPost = BlogPost.blogPosts.firstWhere(
+      (blogPost) => blogPost.id == widget.blogPostId,
+    );
 
     super.initState();
   }
@@ -28,17 +29,18 @@ class _BlogPostScrrenState extends State<BlogPostScrren> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(blogPost.title),
-      ),
+      appBar: AppBar(title: Text(blogPost.title)),
       body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: blogPost.paragraphs
-              .map((paragraph) => Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: SelectTableTextWithMenu(text: paragraph),
-                  ))
-              .toList()),
+        padding: const EdgeInsets.all(16.0),
+        children: blogPost.paragraphs
+            .map(
+              (paragraph) => Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: SelectTableTextWithMenu(text: paragraph),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
@@ -65,19 +67,22 @@ class _SelectTableTextWithMenuState extends State<SelectTableTextWithMenu> {
       },
       contextMenuBuilder: (context, editableTextState) {
         return AdaptiveTextSelectionToolbar(
-            anchors: editableTextState.contextMenuAnchors,
-            children: [
-              FilledButton(
-                  onPressed: () async {
-                    final client = AiSpeechClient();
+          anchors: editableTextState.contextMenuAnchors,
+          children: [
+            FilledButton(
+              onPressed: () async {
+                final client = AiSpeechClient();
 
-                    final res =
-                        await client.convertTextToSpeech(text: selectedText);
+                final res = await client.convertTextToSpeech(
+                  text: selectedText,
+                );
 
-                    playFromUni8List(res["audioBytes"]);
-                  },
-                  child: const Text("Conver To Speech"))
-            ]);
+                playFromUni8List(res["audioBytes"]);
+              },
+              child: const Text("Conver To Speech"),
+            ),
+          ],
+        );
       },
     );
   }

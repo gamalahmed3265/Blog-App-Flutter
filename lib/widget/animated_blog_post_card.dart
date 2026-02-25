@@ -1,15 +1,16 @@
+import 'package:blog_app_flutter/models/blog_post.dart';
 import 'package:flutter/material.dart';
-import 'package:models/arc/blog_post.dart';
 
 class AnimatedBlogPostCard extends StatelessWidget {
   final BlogPost blogPosts;
   final int cardIndex;
   final Animation animation;
-  const AnimatedBlogPostCard(
-      {super.key,
-      required this.blogPosts,
-      required this.cardIndex,
-      required this.animation});
+  const AnimatedBlogPostCard({
+    super.key,
+    required this.blogPosts,
+    required this.cardIndex,
+    required this.animation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,33 +21,27 @@ class AnimatedBlogPostCard extends StatelessWidget {
       colorScheme.primary,
       colorScheme.secondary,
       colorScheme.primaryContainer,
-      colorScheme.secondaryContainer
+      colorScheme.secondaryContainer,
     ];
     final fontColors = [
       colorScheme.onPrimary,
       colorScheme.onSecondary,
       colorScheme.onPrimaryContainer,
-      colorScheme.onSecondaryContainer
+      colorScheme.onSecondaryContainer,
     ];
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         leadIconsContainer(colors, textTheme),
-        const SizedBox(
-          width: 8.0,
-        ),
+        const SizedBox(width: 8.0),
         Expanded(
           child: Column(
             children: [
               Row(
                 children: [
                   authorImage(),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  Expanded(
-                    child: titleContainer(textTheme),
-                  ),
+                  const SizedBox(width: 8.0),
+                  Expanded(child: titleContainer(textTheme)),
                 ],
               ),
               Expanded(
@@ -66,13 +61,16 @@ class AnimatedBlogPostCard extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
 
   Widget containerBody(
-      List<Color> colors, TextTheme textTheme, List fontColors) {
+    List<Color> colors,
+    TextTheme textTheme,
+    List fontColors,
+  ) {
     return Container(
       height: 110,
       margin: const EdgeInsets.only(top: 8.0),
@@ -80,68 +78,67 @@ class AnimatedBlogPostCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Image.network(
-              blogPosts.thumbnailUrl,
-              fit: BoxFit.cover,
-            ),
+            child: blogPosts.thumbnailUrl.isNotEmpty
+                ? Image.network(
+                    blogPosts.thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.broken_image, size: 48),
+                  )
+                : const Icon(Icons.image_not_supported, size: 48),
           ),
           Expanded(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  blogPosts.title,
-                  maxLines: 2,
-                  style: textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: fontColors[cardIndex % colors.length],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    blogPosts.title,
+                    maxLines: 2,
+                    style: textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: fontColors[cardIndex % colors.length],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.remove_red_eye,
-                        size: 20,
-                        color: fontColors[cardIndex % colors.length],
-                      ),
-                      const SizedBox(
-                        width: 4.0,
-                      ),
-                      Text(
-                        blogPosts.viewsCount.toString(),
-                        style: textTheme.bodySmall!.copyWith(
+                  const SizedBox(height: 8.0),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.remove_red_eye,
+                          size: 20,
+                          color: fontColors[cardIndex % colors.length],
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          blogPosts.viewsCount.toString(),
+                          style: textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: fontColors[cardIndex % colors.length]),
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      Icon(
-                        Icons.favorite,
-                        size: 20,
-                        color: fontColors[cardIndex % colors.length],
-                      ),
-                      const SizedBox(
-                        width: 4.0,
-                      ),
-                      Text(
-                        blogPosts.likesCount.toString(),
-                        style: textTheme.bodySmall!.copyWith(
+                            color: fontColors[cardIndex % colors.length],
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Icon(
+                          Icons.favorite,
+                          size: 20,
+                          color: fontColors[cardIndex % colors.length],
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          blogPosts.likesCount.toString(),
+                          style: textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: colors[cardIndex % colors.length]),
-                      )
-                    ],
+                            color: colors[cardIndex % colors.length],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
-          ))
+          ),
         ],
       ),
     );
@@ -149,26 +146,32 @@ class AnimatedBlogPostCard extends StatelessWidget {
 
   RichText titleContainer(TextTheme textTheme) {
     return RichText(
-        text: TextSpan(
-            text: blogPosts.author,
-            style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-            children: [
+      text: TextSpan(
+        text: blogPosts.author,
+        style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+        children: [
           TextSpan(text: "created a new post", style: textTheme.bodyLarge),
-          TextSpan(text: blogPosts.publishedDateFormatted)
-        ]));
+          TextSpan(text: blogPosts.publishedDateFormatted),
+        ],
+      ),
+    );
   }
 
   ClipRRect authorImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
-      child: Image.network(
-        blogPosts.authorImageUrl,
-        height: 50,
-        width: 50,
-        cacheHeight: 50,
-        cacheWidth: 50,
-        fit: BoxFit.cover,
-      ),
+      child: blogPosts.authorImageUrl.isNotEmpty
+          ? Image.network(
+              blogPosts.authorImageUrl,
+              height: 50,
+              width: 50,
+              cacheHeight: 50,
+              cacheWidth: 50,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.person, size: 40),
+            )
+          : const Icon(Icons.person, size: 40),
     );
   }
 
